@@ -45,7 +45,7 @@
 -----
 
 
-# Bulk Audio Extractor GUI
+# Bulk Audio Extractor
 
 A simple graphical user interface (GUI) tool built with Python and Tkinter to batch extract audio from video and media files. It saves the extracted audio in `.m4a` format, offering a choice between lossy (AAC) and lossless (ALAC) codecs.
 
