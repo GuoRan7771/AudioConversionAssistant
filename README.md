@@ -17,6 +17,19 @@
 
 -----
 
+## 支持的输入格式
+
+本工具的格式兼容性完全取决于其核心组件 **FFmpeg**。它并非依据文件后缀名（如 `.mp4` 或 `.avi`）来判断，而是使用 `ffprobe`（FFmpeg 的一部分）来检测文件是否为有效的媒体文件。
+
+因此，理论上，**只要您系统中安装的 FFmpeg 版本能够读取和解码的任何音频或视频格式，本工具都支持**。这包括但不限于：
+
+  * **常见视频格式**: `MP4`, `MKV`, `MOV`, `AVI`, `WMV`, `FLV`, `WebM`, `MPEG` 等。
+  * **常见音频格式**: `MP3`, `WAV`, `FLAC`, `OGG`, `WMA`, `AAC` 等。
+
+简而言之，支持的格式非常广泛，几乎涵盖了所有常见的媒体文件类型。
+
+-----
+
 ## 前置要求
 
 在运行此脚本之前，您必须在系统上安装以下软件：
@@ -40,10 +53,7 @@
       * 选择 **AAC** 可生成较小的有损文件（适用于大多数情况）。
       * 选择 **ALAC** 可生成较大的无损文件（适合存档）。
 5.  **开始转换**: 点击 **开始转换 (Start Conversion)** 按钮。此时会弹出一个确认对话框，点击“是”即可开始。
-6.  **完成**: 等待处理结束。程序会显示一个完成通知，并且包含新 `.m4a` 音频文件的文件夹将自动打开。
-
------
-
+6.  **完成**: 等待处理结束。程序会显示一个完成通知，并且包含新 `.m4a` 音频文件的文件夹将自动打开。-----
 
 # Bulk Audio Extractor
 
@@ -59,6 +69,19 @@ A simple graphical user interface (GUI) tool built with Python and Tkinter to ba
   * **Organized Output**: Automatically creates a new subfolder (e.g., `YourFolder_aac`) for the extracted audio files, keeping your source directory clean.
   * **Cross-Platform**: Works on Windows, macOS, and Linux.
   * **Convenience**: Automatically opens the output folder once the conversion process is complete.
+
+-----
+
+## Supported Input Formats
+
+This tool's format compatibility is entirely dependent on its core component, **FFmpeg**. It does not rely on file extensions (like `.mp4` or `.avi`) but instead uses `ffprobe` (part of FFmpeg) to detect if a file is a valid media file.
+
+Therefore, in principle, **any audio or video format that your installed version of FFmpeg can read and decode is supported**. This includes, but is not limited to:
+
+  * **Common Video Formats**: `MP4`, `MKV`, `MOV`, `AVI`, `WMV`, `FLV`, `WebM`, `MPEG`, etc.
+  * **Common Audio Formats**: `MP3`, `WAV`, `FLAC`, `OGG`, `WMA`, `AAC`, etc.
+
+In short, support is extremely broad and covers virtually all common media types.
 
 -----
 
@@ -86,6 +109,4 @@ Before running this script, you must have the following installed on your system
       * Select **ALAC** for larger, lossless files (ideal for archival purposes).
 5.  **Start Conversion**: Click the **Start Conversion** button. A confirmation dialog will appear. Click "Yes" to begin.
 6.  **Done**: Wait for the process to finish. A notification will appear, and the folder containing your new `.m4a` audio files will open automatically.
-
------
 
