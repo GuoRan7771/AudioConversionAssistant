@@ -1,4 +1,3 @@
-Of course. Here is a complete README file for the provided Python script, written in both English and Chinese.
 -----
 
 # 批量音频提取器 GUI
@@ -42,9 +41,6 @@ Of course. Here is a complete README file for the provided Python script, writte
       * 选择 **ALAC** 可生成较大的无损文件（适合存档）。
 5.  **开始转换**: 点击 **开始转换 (Start Conversion)** 按钮。此时会弹出一个确认对话框，点击“是”即可开始。
 6.  **完成**: 等待处理结束。程序会显示一个完成通知，并且包含新 `.m4a` 音频文件的文件夹将自动打开。
------
-
------
 
 -----
 
