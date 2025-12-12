@@ -3,6 +3,10 @@ import sys
 import subprocess
 import tkinter as tk
 from tkinter import filedialog, messagebox
+from pathlib import Path
+import json
+
+DEFAULT_FOLDER = str(Path.home() / "Music" / "album")
 
 # --- NEW: Function to open a folder in the default file explorer ---
 def open_folder(path):
@@ -35,6 +39,24 @@ def is_media_file(file_path):
     except (subprocess.CalledProcessError, FileNotFoundError):
         return False
 
+def get_attached_pic_indices(file_path):
+    """Return video stream indices that are marked as attached pictures."""
+    cmd = [
+        "ffprobe",
+        "-v", "error",
+        "-select_streams", "v",
+        "-show_entries", "stream=index,disposition",
+        "-of", "json",
+        file_path
+    ]
+    try:
+        result = subprocess.run(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True, check=True)
+        data = json.loads(result.stdout)
+        streams = data.get("streams", [])
+        return [i for i, s in enumerate(streams) if s.get("disposition", {}).get("attached_pic") == 1]
+    except (subprocess.CalledProcessError, FileNotFoundError, json.JSONDecodeError):
+        return []
+
 def extract_audio_gui(input_folder, codec):
     base_folder_name = os.path.basename(os.path.normpath(input_folder))
     output_folder_name = f"{base_folder_name}_{codec}"
@@ -58,13 +80,32 @@ def extract_audio_gui(input_folder, codec):
         output_path = os.path.join(output_folder_path, output_filename)
 
         print(f"Processing: {filename} → {output_folder_name}/{output_filename}")
+        # Keep tags and cover art: copy metadata, map first audio stream, and only copy attached pictures (no video).
         command = [
-            "ffmpeg", "-i", input_path, "-vn",
-            "-acodec", codec, 
+            "ffmpeg",
+            "-i", input_path,
+            "-map_metadata", "0",
+            "-map", "0:a:0"
+        ]
+
+        pic_indices = get_attached_pic_indices(input_path)
+        for idx in pic_indices:
+            command.extend(["-map", f"0:v:{idx}"])
+
+        command.extend(["-c:a", codec])
+        if pic_indices:
+            command.extend(["-c:v", "copy"])
+
+        command.extend([
+            "-movflags", "+use_metadata_tags",
             "-y",
             output_path
-        ]
-        subprocess.run(command, stdout=subprocess.DEVNULL, stderr=subprocess.STDOUT)
+        ])
+
+        result = subprocess.run(command, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
+        if result.returncode != 0:
+            print(f"Failed to convert {filename}:\n{result.stdout}")
+            continue
 
     messagebox.showinfo("Complete", f"All conversions finished. Files are saved to:\n{output_folder_path}")
     
@@ -72,7 +113,8 @@ def extract_audio_gui(input_folder, codec):
     open_folder(output_folder_path)
 
 def choose_folder():
-    folder_selected = filedialog.askdirectory()
+    start_dir = folder_path_var.get() or DEFAULT_FOLDER
+    folder_selected = filedialog.askdirectory(initialdir=start_dir)
     if folder_selected:
         folder_path_var.set(folder_selected)
 
@@ -100,6 +142,7 @@ root = tk.Tk()
 root.title("Bulk Audio Extractor (M4A)")
 
 folder_path_var = tk.StringVar()
+folder_path_var.set(DEFAULT_FOLDER)
 codec_var = tk.StringVar(value="aac")
 
 # --- Widgets ---
